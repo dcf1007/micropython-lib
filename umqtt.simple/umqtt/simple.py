@@ -171,7 +171,7 @@ class MQTTClient:
         if res == b"\xd0":  # PINGRESP
             sz = self.sock.read(1)[0]
             assert sz == 0
-            return None
+            return b"\xd0\x00" #Return PINGRESP value instead of None to differentiate between no contents and ping response.
         op = res[0]
         if op & 0xf0 != 0x30:
             return op & 0xf0
