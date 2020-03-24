@@ -1,4 +1,5 @@
 import usocket as socket
+import utime
 
 class MQTTException(Exception):
     pass
@@ -109,7 +110,29 @@ class MQTTClient:
         self.sock.close()
 
     def ping(self):
+        #Make sure the connection buffer is empty.
+        prev_msg = self.check_msg()
+        while prev_msg != None:
+            prev_msg = self.check_msg()
+
+        #Send PINGREQ
         self.sock.write(b"\xc0\0")
+        print("PINGREQ", end="")
+        
+        #Check the response
+        i=0
+        while i < 10:
+            utime.sleep(0.1)
+            print(".", end = "")
+            res = self.check_msg()
+            if res ==  b"\xd0\x00": # PINGRESP
+                print("PINGRESP OK")
+                return None
+            else:
+                i += 1
+        else:
+            print("Error")
+            raise OSError("Connection timed out")
 
     def publish(self, topic, msg, retain=False, qos=0):
         pkt = bytearray(b"\x30\0\0\0\0")
