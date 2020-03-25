@@ -8,12 +8,12 @@ class MQTTClient(simple.MQTTClient):
         while i < attempts:
             try:
                 if i > 0:
-					utime.sleep(1)
+                    utime.sleep(1)
                     print("Trying to reconnect")
                     self.connect(False)
                 return meth(*args, **kwargs)
             except OSError as e:
-                print("%r" % e)
+                print("Error: Connection failed (", e, ")")
                 i += 1
         print("Error: Time out")
 
