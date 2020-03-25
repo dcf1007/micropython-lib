@@ -116,7 +116,7 @@ class MQTTClient:
             prev_msg = self.check_msg()
 
         #Send PINGREQ
-        self.sock.write(b"\xc0\0")
+        self.sock.write(b"\xc0\x00")
         print("PINGREQ", end="")
         
         #Check the response

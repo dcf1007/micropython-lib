@@ -5,7 +5,7 @@ import simple
 class MQTTClient(simple.MQTTClient):
     def with_retry(self, meth, *args, attempts = 1, **kwargs):
         i = 0
-        while i < attempts:
+        while i < attempts or attempts == -1:
             try:
                 if i > 0:
                     utime.sleep(1)
